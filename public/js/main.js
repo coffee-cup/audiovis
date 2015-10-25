@@ -16,6 +16,11 @@ window.onload = function () {
   source.connect(analyser);
   analyser.connect(context.destination);
 
+  // returns if audio is playing
+  var isPlaying = function () {
+    return !audio.paused;
+  }
+
   // create frequency array to hold audio data
   var frequencyData = new Uint8Array(analyser.frequencyBinCount);
 
@@ -81,7 +86,7 @@ window.onload = function () {
 
   var waveform = new Waveform(s, width, height);
 
-  // visualComponents.push(new Background(s, width, height));
+  visualComponents.push(new Background(s, width, height));
   visualComponents.push(mainBass);
   visualComponents.push(centerVisual);
   visualComponents.push(centerVisual_2);
@@ -103,15 +108,48 @@ window.onload = function () {
   }
 
   function renderFrame() {
-    // check if analyser has any audio data before trying to render anything
     requestAnimationFrame(renderFrame);
+    // check if analyser has any audio data before trying to render anything
+    if (!isPlaying()) {
+      return;
+    }
+
     analyser.getByteFrequencyData(frequencyData);
     // analyser.getByteTimeDomainData(frequencyData);
 
     // draw all visual components
-    visualComponents.forEach(function (c, i) {
-      c.draw(frequencyData);
-    });
+    // visualComponents.forEach(function (c, i) {
+    //   c.draw(frequencyData);
+    // });
+
+    // initialize components with audio data
+    for (var i = 0; i < visualComponents.length; i++) {
+      var c = visualComponents[i];
+      if (c.initFrame) {
+        c.initFrame(frequencyData);
+      }
+    }
+
+    // loop through frequency data and send each index to the component
+    // this is convient because we ony have to run through this loop once
+    var sum = 0;
+    for (var i = 0; i < frequencyData.length; i++) {
+      for (var j = 0; j < visualComponents.length; j++) {
+        var c = visualComponents[j];
+        if (c.drawFrame) {
+          c.drawFrame(frequencyData[i], i, frequencyData);
+        }
+      }
+      sum += frequencyData[i];
+    }
+
+    // call endFrames on all compoents with audio data and sum
+    for (var i = 0; i < visualComponents.length; i++) {
+      var c = visualComponents[i];
+      if (c.endFrames) {
+        c.endFrames(frequencyData, sum);
+      }
+    }
   }
 
   renderFrame();

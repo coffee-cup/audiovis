@@ -17,7 +17,7 @@ function Waveform(svg, width, height) {
   this.lines = [];
 }
 
-Waveform.prototype.init = function() {
+Waveform.prototype.init = function () {
 
   this.line_length_map = d3.scale.linear()
     .domain([0, 255])
@@ -31,7 +31,7 @@ Waveform.prototype.init = function() {
 
   // init it line
 
-  for (var i=0;i<this.SIZE;i++) {
+  for (var i = 0; i < this.SIZE; i++) {
     var d = this.getLine(i, 100);
     var l = this.svg.path(d)
       .attr('class', 'waveform-line')
@@ -43,7 +43,7 @@ Waveform.prototype.init = function() {
 };
 
 // returns a line for the ith spot and strength
-Waveform.prototype.getLine = function(i, strength) {
+Waveform.prototype.getLine = function (i, strength) {
   var line_length = this.line_length_map(strength);
   var start = 'M' + (i * this.point_separation) + ',' + this.y(this.position_y - line_length / 2);
   var end = 'T' + (i * this.point_separation) + ',' + this.y(this.position_y + line_length / 2);
@@ -51,19 +51,29 @@ Waveform.prototype.getLine = function(i, strength) {
   return d;
 };
 
-Waveform.prototype.getPath = function(audio_data) {
+Waveform.prototype.getPath = function (audio_data) {
   var d = 'M' + 0 + ',' + this.position_y;
-  for (var i=1;i<this.SIZE;i++) {
+  for (var i = 1; i < this.SIZE; i++) {
     var length = this.line_length_map(audio_data[i + this.START]);
     d += 'L' + (i * this.point_separation) + ',' + this.y(this.position_y + length);
   }
   return d;
 };
 
-Waveform.prototype.draw = function(audio_data) {
-  for (var i=0;i<this.SIZE;i++) {
-    var l = this.lines[i];
-    var d = this.getLine(i, audio_data[i + this.START]);
-    l.attr({'d': d});
-  }
+Waveform.prototype.initFrame = function (audio_data) {
+
 };
+
+Waveform.prototype.drawFrame = function (frame, i, audio_data) {
+  if (i >= this.SIZE) {
+    return;
+  }
+
+  var l = this.lines[i];
+  var d = this.getLine(i, audio_data[i + this.START]);
+  l.attr({
+    'd': d
+  });
+};
+
+Waveform.prototype.draw = function (audio_data) {};

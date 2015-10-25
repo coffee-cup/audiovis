@@ -56,16 +56,24 @@ CircleVisual.prototype.init = function () {
   }
 };
 
-CircleVisual.prototype.draw = function (audio_data) {
-  for (var i = 0; i < this.lines.length; i++) {
-    var l = this.lines[i];
-    var d = this.getPath(i, audio_data[i + this.START]);
-    var angle = this.c_map(i);
-    var colour = this.COLOUR;
+CircleVisual.prototype.initFrame = function (audio_data) {
 
-    l.attr({
-      'd': d,
-      'stroke': colour
-    });
-  }
 };
+
+CircleVisual.prototype.drawFrame = function (frame, i, audio_data) {
+  if (i >= this.SIZE) {
+    return;
+  }
+
+  var l = this.lines[i];
+  var d = this.getPath(i, audio_data[i + this.START]);
+  var angle = this.c_map(i);
+  var colour = this.COLOUR;
+
+  l.attr({
+    'd': d,
+    'stroke': colour
+  });
+};
+
+CircleVisual.prototype.draw = function (audio_data) {};

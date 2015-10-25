@@ -3,7 +3,10 @@ function BassWave(svg, width, height) {
   this.svg = svg; // svg to draw to
   this.width = width; // width of canvas
   this.height = height; // height of canvas
-  this.position = {x: this.width / 2, y: this.height / 2};
+  this.position = {
+    x: this.width / 2,
+    y: this.height / 2
+  };
 
   this.SIZE = 50; // number of frequencies to use [0, 1024]
   this.START = 400; // where to start reading array, SIZE + START must be < 1024
@@ -14,22 +17,28 @@ function BassWave(svg, width, height) {
   this.average = 0;
 }
 
-BassWave.prototype.getPath = function(i, strength) {
+BassWave.prototype.getPath = function (i, strength) {
   var angle = this.c_map(i);
   var length = this.line_length_map(strength);
-  var end_pos = {x: (Math.cos(angle) * length) + this.position.x, y: (Math.sin(angle) * length) + this.position.y};
+  var end_pos = {
+    x: (Math.cos(angle) * length) + this.position.x,
+    y: (Math.sin(angle) * length) + this.position.y
+  };
   var d = "M" + this.position.x + "," + this.position.y + "L" + end_pos.x + "," + end_pos.y;
   return d;
 };
 
-BassWave.prototype.getPoint = function(i, strength) {
+BassWave.prototype.getPoint = function (i, strength) {
   var angle = this.c_map(i);
   var length = this.line_length_map(strength);
-  var pos = {x: (Math.cos(angle) * length) + this.position.x, y: (Math.sin(angle) * length) + this.position.y};
+  var pos = {
+    x: (Math.cos(angle) * length) + this.position.x,
+    y: (Math.sin(angle) * length) + this.position.y
+  };
   return pos;
 };
 
-BassWave.prototype.init = function() {
+BassWave.prototype.init = function () {
 
   this.line_length_map = d3.scale.linear()
     .domain([0, 255])
@@ -41,7 +50,7 @@ BassWave.prototype.init = function() {
   // init it line
   var s = this.getPoint(0, 200);
   var d = 'M' + s.x + ',' + s.y;
-  for (var i=1;i<this.SIZE;i++) {
+  for (var i = 1; i < this.SIZE; i++) {
     var p = this.getPoint(i, 200);
     d += 'T' + p.x + ',' + p.y;
   }
@@ -53,26 +62,46 @@ BassWave.prototype.init = function() {
     .attr('stroke-width', 1);
 };
 
-BassWave.prototype.draw = function(audio_data) {
-  var s = this.getPoint(0, audio_data[this.START]);
-  var d = 'M' + s.x + ',' + s.y;
-  var sum = 0;
-  for (var i=1;i<this.SIZE;i++) {
-    var p = this.getPoint(i, audio_data[i + this.START]);
-    sum += audio_data[i + this.START];
-    d += 'T' + p.x + ',' + p.y;
-  }
+BassWave.prototype.initFrame = function (audio_data) {
+  this.s = this.getPoint(0, audio_data[this.START]);
+  this.d = 'M' + this.s.x + ',' + this.s.y;
+  this.sum = 0;
+}
 
+BassWave.prototype.endFrames = function (audio_data, sum) {
   var colour = '#7ee8fa';
-  var dif = Math.abs(sum - this.average);
-  if (Math.abs(sum - this.average) > 300) {
+  var dif = Math.abs(this.sum - this.average);
+  if (Math.abs(this.sum - this.average) > 300) {
     colour = '#2de1c2';
   }
 
-  if (sum + this.average > 0) {
-    this.average = (sum + this.average) / 2
+  if (this.sum + this.average > 0) {
+    this.average = (this.sum + this.average) / 2
   }
 
-  d += 'T' + s.x + ',' + s.y; // close path
-  this.line.attr({'d': d, 'fill': colour});
+  this.d += 'T' + this.s.x + ',' + this.s.y; // close path
+  this.line.attr({
+    'd': this.d,
+    'fill': colour
+  });
+}
+
+BassWave.prototype.drawFrame = function (frame, i, audio_data) {
+  if (i < this.START) {
+    return;
+  }
+
+  if (i >= this.SIZE + this.START) {
+    return;
+  }
+
+  for (var i = 1; i < this.SIZE; i++) {
+    var p = this.getPoint(i, audio_data[i + this.START]);
+    this.sum += audio_data[i + this.START];
+    this.d += 'T' + p.x + ',' + p.y;
+  }
+}
+
+BassWave.prototype.draw = function (audio_data) {
+
 };
