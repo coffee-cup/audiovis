@@ -86,12 +86,14 @@ window.onload = function () {
 
   var waveform = new Waveform(s, width, height);
 
-  visualComponents.push(new Background(s, width, height));
+  var background = new Background(s, width, height);
+
+  visualComponents.push(background);
   visualComponents.push(mainBass);
-  visualComponents.push(centerVisual);
-  visualComponents.push(centerVisual_2);
-  visualComponents.push(highAngleVisual);
-  visualComponents.push(waveform);
+  // visualComponents.push(centerVisual);
+  // visualComponents.push(centerVisual_2);
+  // visualComponents.push(highAngleVisual);
+  // visualComponents.push(waveform);
 
   // init all visual components
   visualComponents.forEach(function (c, i) {

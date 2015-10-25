@@ -8,13 +8,18 @@ function BassWave(svg, width, height) {
     y: this.height / 2
   };
 
-  this.SIZE = 50; // number of frequencies to use [0, 1024]
+  this.SIZE = 100; // number of frequencies to use [0, 1024]
   this.START = 400; // where to start reading array, SIZE + START must be < 1024
   this.COLOUR = 'red';
   this.MAX_LENGTH = (this.height * 0.8);
+  this.crazy = false;
+  this.THRESHOLD = 500;
+  this.colour = "cyan";
+  this.ANIMATING = false;
 
   this.line = null;
   this.average = 0;
+  this.colours = ["#0CBEFF", "#FF2020", "#FBFF00", "#22FF02", "#FF1FC0", "#6122FF"];
 }
 
 BassWave.prototype.getPath = function (i, strength) {
@@ -69,10 +74,9 @@ BassWave.prototype.initFrame = function (audio_data) {
 }
 
 BassWave.prototype.endFrames = function (audio_data, sum) {
-  var colour = '#7ee8fa';
-  var dif = Math.abs(this.sum - this.average);
-  if (Math.abs(this.sum - this.average) > 300) {
-    colour = '#2de1c2';
+  var diff = Math.abs(this.sum - this.average);
+  if (diff > this.THRESHOLD) {
+    this.colour = this.colours[Math.floor(Math.random() * this.colours.length)];
   }
 
   if (this.sum + this.average > 0) {
@@ -81,9 +85,19 @@ BassWave.prototype.endFrames = function (audio_data, sum) {
 
   this.d += 'T' + this.s.x + ',' + this.s.y; // close path
   this.line.attr({
-    'd': this.d,
-    'fill': colour
+    'd': this.d
   });
+
+  var c = chroma(this.colour);
+  if (!this.ANIMATING) {
+    var _this = this;
+    _this.ANIMATING = true;
+    this.line.animate({
+      'fill': c
+    }, 1000, function () {
+      _this.ANIMATING = false;
+    });
+  }
 }
 
 BassWave.prototype.drawFrame = function (frame, i, audio_data) {
@@ -95,11 +109,13 @@ BassWave.prototype.drawFrame = function (frame, i, audio_data) {
     return;
   }
 
-  for (var i = 1; i < this.SIZE; i++) {
-    var p = this.getPoint(i, audio_data[i + this.START]);
-    this.sum += audio_data[i + this.START];
-    this.d += 'T' + p.x + ',' + p.y;
+  var letter = 'L';
+  if (this.crazy) {
+    letter = 'T';
   }
+  var p = this.getPoint(i, audio_data[i + this.START]);
+  this.sum += audio_data[i + this.START];
+  this.d += letter + p.x + ',' + p.y;
 }
 
 BassWave.prototype.draw = function (audio_data) {
