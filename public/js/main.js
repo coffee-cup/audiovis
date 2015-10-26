@@ -49,14 +49,15 @@ window.onload = function () {
 
   var centerVisual = new CircleVisual(s, width, height);
   centerVisual.position = {
-    x: x(10),
-    y: height / 2
+    x: x(35),
+    y: y(75)
   };
+  centerVisual.crazy = true;
 
   var centerVisual_2 = new CircleVisual(s, width, height);
-  centerVisual.position = {
-    x: x(75),
-    y: height / 2
+  centerVisual_2.position = {
+    x: x(0),
+    y: y(55)
   }
 
   var mainBass = new BassWave(s, width, height);
@@ -72,8 +73,12 @@ window.onload = function () {
   highAngleVisual.COLOUR = 'rgb(139, 20, 244)';
   highAngleVisual.START = 5;
   highAngleVisual.SIZE = 50;
-  highAngleVisual.STROKE_WIDTH = 3;
-  highAngleVisual.MAX_LENGTH = width * 0.8;
+  highAngleVisual.STROKE_WIDTH = 4;
+  highAngleVisual.MAX_LENGTH = width * 0.4;
+  highAngleVisual.colours = ["#D21A11", "#03FF80", "#24FF03"];
+  highAngleVisual.THRESHOLD = 10000;
+  highAngleVisual.colour = "#03FF80";
+  highAngleVisual.crazy = true;
 
   var largeBass = new BassWave(s, width, height);
   largeBass.COLOUR = 'red';
@@ -89,11 +94,11 @@ window.onload = function () {
   var background = new Background(s, width, height);
 
   visualComponents.push(background);
+  visualComponents.push(highAngleVisual);
+  visualComponents.push(waveform);
+  visualComponents.push(centerVisual);
   visualComponents.push(mainBass);
-  // visualComponents.push(centerVisual);
   // visualComponents.push(centerVisual_2);
-  // visualComponents.push(highAngleVisual);
-  // visualComponents.push(waveform);
 
   // init all visual components
   visualComponents.forEach(function (c, i) {

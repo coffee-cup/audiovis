@@ -4,9 +4,9 @@ function Background(svg, width, height) {
   this.width = width; // width of canvas
   this.height = height; // height of canvas
   this.SIZE = 200; // number of frequencies to use [0, 1024]
-  this.START = 800; // where to start reading array, SIZE + START must be < 1024
+  this.START = 600; // where to start reading array, SIZE + START must be < 1024
   this.THRESHOLD = 2000; // amount sum of values over range has to change to trigger change animates
-  this.BLINK_THRESHOLD = 3500 // amount sum of values over range has to chnage to blink colour change
+  this.BLINK_THRESHOLD = 3000 // amount sum of values over range has to chnage to blink colour change
   this.PREV_VALUE = -1;
   this.back = null;
   this.ANIMATING = false;
@@ -16,7 +16,7 @@ function Background(svg, width, height) {
 }
 
 // returns random value from array
-randomColour = function (colours) {
+var randomColour = function (colours) {
   return colours[Math.floor(Math.random() * colours.length)];
 }
 
@@ -81,7 +81,7 @@ Background.prototype.endFrames = function (audio_data, sum) {
         var _this = this;
         _this.ANIMATING = true;
         this.back.animate({
-          fill: c1.hex()
+          fill: c1.alpha(0.6).hex()
         }, 1250, function () {
           _this.ANIMATING = false;
         });

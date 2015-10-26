@@ -3,12 +3,12 @@ function Waveform(svg, width, height) {
   this.svg = svg; // svg to draw to
   this.width = width; // width of canvas
   this.height = height; // height of canvas
-  this.position_y = this.height / 2;
+  this.position_y = (this.height / 2) + (this.height / 4);
 
-  this.SIZE = 100; // number of frequencies to use [0, 1024]
-  this.START = 150; // where to start reading array, SIZE + START must be < 1024
-  this.COLOUR = 'rgba(125, 223, 100, 0.7)';
-  this.STROKE_WIDTH = 2;
+  this.SIZE = 200; // number of frequencies to use [0, 1024]
+  this.START = 300; // where to start reading array, SIZE + START must be < 1024
+  this.COLOUR = 'rgba(138, 3, 255, 1.0)';
+  this.STROKE_WIDTH = 4;
   this.MAX_HEIGHT = this.height * 0.9;
 
   this.sin_index = 0;
