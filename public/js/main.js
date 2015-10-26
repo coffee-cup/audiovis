@@ -33,8 +33,9 @@ window.onload = function () {
     e.stopPropagation();
     var files = e.originalEvent.dataTransfer.files;
     if (files.length > 0) {
+      var url = URL.createObjectURL(files[0]);
       var name = files[0].name;
-      loadAudioSource(name);
+      loadAudioSource(url);
     }
   });
 
