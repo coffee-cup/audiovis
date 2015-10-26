@@ -2,7 +2,7 @@ window.onload = function () {
 
   // load audio data
   var audio = document.getElementById('myAudio');
-  audio.setAttribute('src', 'morethanyouthought.mp3');
+  audio.setAttribute('src', 'cold.mp3');
   audio.controls = true;
   audio.load();
 
