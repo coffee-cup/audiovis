@@ -15,7 +15,7 @@ function CircleVisual(svg, width, height) {
   this.ANGLE_END = 2 * Math.PI;
   this.STROKE_WIDTH = 5;
   this.colour = '#fe64a3';
-  this.THRESHOLD = 28000;
+  this.THRESHOLD = 10000;
   this.NEED_ANIMATE = false;
   this.PREV_VALUE = -1;
   this.ANIMATING = false;
@@ -51,7 +51,7 @@ CircleVisual.prototype.init = function () {
     .range([this.height, 0]);
 
   for (var i = 0; i < this.SIZE; i++) {
-    var d = this.getPath(i, 150);
+    var d = this.getPath(i, 0);
     var l = this.svg.path(d)
       .attr('class', 'circle-line')
       .attr('fill', 'none')

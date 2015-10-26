@@ -32,7 +32,7 @@ Waveform.prototype.init = function () {
   // init it line
 
   for (var i = 0; i < this.SIZE; i++) {
-    var d = this.getLine(i, 100);
+    var d = this.getLine(i, 0);
     var l = this.svg.path(d)
       .attr('class', 'waveform-line')
       .attr('fill', 'none')

@@ -16,3 +16,18 @@ body {
   bottom: 5px;
   left: 1em;
 }
+
+#desc {
+  position: relative;
+  left: 1em;
+  bottom: 8px;
+}
+
+.song {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.song:hover {
+  color: grey;
+}

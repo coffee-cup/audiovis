@@ -9,7 +9,7 @@ function BassWave(svg, width, height) {
   };
 
   this.SIZE = 100; // number of frequencies to use [0, 1024]
-  this.START = 400; // where to start reading array, SIZE + START must be < 1024
+  this.START = 300; // where to start reading array, SIZE + START must be < 1024
   this.COLOUR = 'red';
   this.MAX_LENGTH = (this.height * 0.8);
   this.crazy = false;
@@ -53,10 +53,10 @@ BassWave.prototype.init = function () {
     .range([0, 2 * Math.PI]);
 
   // init it line
-  var s = this.getPoint(0, 200);
+  var s = this.getPoint(0, 0);
   var d = 'M' + s.x + ',' + s.y;
   for (var i = 1; i < this.SIZE; i++) {
-    var p = this.getPoint(i, 200);
+    var p = this.getPoint(i, 0);
     d += 'T' + p.x + ',' + p.y;
   }
 

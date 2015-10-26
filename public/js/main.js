@@ -2,9 +2,49 @@ window.onload = function () {
 
   // load audio data
   var audio = document.getElementById('myAudio');
-  audio.setAttribute('src', 'song3.mp3');
+  audio.setAttribute('src', 'morethanyouthought.mp3');
   audio.controls = true;
   audio.load();
+
+  var emptyCount = 0;
+
+  // event listeners
+  addEventHandler(audio, "playing", function () {
+    $('#desc').fadeOut();
+  });
+
+  addEventHandler(audio, "pause", function () {
+    $('#desc').fadeIn();
+  });
+
+  var loadAudioSource = function (src) {
+    audio.pause();
+    audio.setAttribute('src', src);
+    audio.load();
+    audio.play();
+  };
+
+  $('body').on('dragover', function (e) {
+    e.preventDefault();
+  });
+
+  $('body').on('drop', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var files = e.originalEvent.dataTransfer.files;
+    if (files.length > 0) {
+      var name = files[0].name;
+      loadAudioSource(name);
+    }
+  });
+
+  $('body').on('click', '.song', function (e) {
+    var id = e.target.id;
+    if (id) {
+      loadAudioSource(id);
+    }
+  });
+
   // audio.play();
 
   // setup audio processing
@@ -117,8 +157,15 @@ window.onload = function () {
   function renderFrame() {
     requestAnimationFrame(renderFrame);
     // check if analyser has any audio data before trying to render anything
-    if (!isPlaying()) {
+
+    // buffer to let visualizer cool down
+    if (!isPlaying() && emptyCount < 50) {
+      emptyCount++;
+    } else if (!isPlaying()) {
       return;
+    }
+    if (isPlaying()) {
+      emptyCount = 0;
     }
 
     analyser.getByteFrequencyData(frequencyData);
@@ -161,3 +208,16 @@ window.onload = function () {
 
   renderFrame();
 };
+
+function addEventHandler(obj, evt, handler) {
+  if (obj.addEventListener) {
+    // W3C method
+    obj.addEventListener(evt, handler, false);
+  } else if (obj.attachEvent) {
+    // IE method.
+    obj.attachEvent('on' + evt, handler);
+  } else {
+    // Old school method.
+    obj['on' + evt] = handler;
+  }
+}
