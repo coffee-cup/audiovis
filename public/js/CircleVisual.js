@@ -9,7 +9,7 @@ function CircleVisual(svg, width, height) {
   }; // where the center of the circle is
 
   this.MAX_LENGTH = (this.width / 2);
-  this.SIZE = 200; // number of frequencies to use [0, 1024]
+  this.SIZE = 150; // number of frequencies to use [0, 1024]
   this.START = 50; // where to start reading array, SIZE + START must be < 1024
   this.ANGLE_START = 0;
   this.ANGLE_END = 2 * Math.PI;
