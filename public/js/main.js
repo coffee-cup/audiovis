@@ -135,10 +135,10 @@ window.onload = function () {
   var background = new Background(s, width, height);
 
   visualComponents.push(background);
-  visualComponents.push(highAngleVisual);
   visualComponents.push(waveform);
   visualComponents.push(centerVisual);
   visualComponents.push(mainBass);
+  visualComponents.push(highAngleVisual);
   // visualComponents.push(centerVisual_2);
 
   // init all visual components
