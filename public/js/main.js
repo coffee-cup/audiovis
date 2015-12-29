@@ -1,4 +1,4 @@
-window.onload = function () {
+window.onload = function() {
 
   // load audio data
   var audio = document.getElementById('myAudio');
@@ -9,26 +9,26 @@ window.onload = function () {
   var emptyCount = 0;
 
   // event listeners
-  addEventHandler(audio, "playing", function () {
+  addEventHandler(audio, "playing", function() {
     $('#desc').fadeOut();
   });
 
-  addEventHandler(audio, "pause", function () {
+  addEventHandler(audio, "pause", function() {
     $('#desc').fadeIn();
   });
 
-  var loadAudioSource = function (src) {
+  var loadAudioSource = function(src) {
     audio.pause();
     audio.setAttribute('src', src);
     audio.load();
     audio.play();
   };
 
-  $('body').on('dragover', function (e) {
+  $('body').on('dragover', function(e) {
     e.preventDefault();
   });
 
-  $('body').on('drop', function (e) {
+  $('body').on('drop', function(e) {
     e.preventDefault();
     e.stopPropagation();
     var files = e.originalEvent.dataTransfer.files;
@@ -39,7 +39,7 @@ window.onload = function () {
     }
   });
 
-  $('body').on('click', '.song', function (e) {
+  $('body').on('click', '.song', function(e) {
     var id = e.target.id;
     if (id) {
       loadAudioSource(id);
@@ -49,7 +49,15 @@ window.onload = function () {
   // audio.play();
 
   // setup audio processing
-  var context = new AudioContext();
+  var context = null,
+    usingWebAudio = true;
+  if (typeof AudioContext !== 'undefined') {
+    context = new AudioContext();
+  } else if (typeof webkitAudioContext !== 'undefined') {
+    context = new webkitAudioContext();
+  } else {
+    usingWebAudio = false;
+  }
   var source = context.createMediaElementSource(audio);
   var analyser = context.createAnalyser();
 
@@ -58,7 +66,7 @@ window.onload = function () {
   analyser.connect(context.destination);
 
   // returns if audio is playing
-  var isPlaying = function () {
+  var isPlaying = function() {
     return !audio.paused;
   }
 
@@ -142,7 +150,7 @@ window.onload = function () {
   // visualComponents.push(centerVisual_2);
 
   // init all visual components
-  visualComponents.forEach(function (c, i) {
+  visualComponents.forEach(function(c, i) {
     c.init();
   });
 
